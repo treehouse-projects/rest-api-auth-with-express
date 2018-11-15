@@ -1,1 +1,2 @@
-# rest-api-auth-with-express
+
+# REST API Authentication with Express
