@@ -82,6 +82,7 @@ const router = express.Router();
 // Route that returns the current authenticated user.
 router.get('/users', authenticateUser, (req, res) => {
   const user = req.currentUser;
+
   res.json({
     name: user.name,
     username: user.username,
@@ -100,23 +101,28 @@ router.post('/users', [
     .exists({ checkNull: true, checkFalsy: true })
     .withMessage('Please provide a value for "password"'),
 ], (req, res) => {
+  // Attempt to get the validation result from the Request object.
   const errors = validationResult(req);
+
+  // If there are validation errors...
   if (!errors.isEmpty()) {
+    // Use the Array `map()` method to get a list of error messages.
     const errorMessages = errors.array().map(error => error.msg);
+
+    // Return the validation errors to the client.
     return res.status(400).json({ errors: errorMessages });
   }
 
+  // Get the user from the request body.
   const user = req.body;
 
-  // Hash the new user's password (if available).
-  if (user.password) {
-    user.password = bcryptjs.hashSync(user.password, 10);
-  }
+  // Hash the new user's password.
+  user.password = bcryptjs.hashSync(user.password, 10);
 
   // Add the user to the `users` array.
   users.push(user);
 
-  return res.status(201).location('/users').json();
+  return res.status(201).end();
 });
 
 module.exports = router;
