@@ -117,11 +117,12 @@ router.post('/users', [
   const user = req.body;
 
   // Hash the new user's password.
-  user.password = bcryptjs.hashSync(user.password, 10);
+  user.password = bcryptjs.hashSync(user.password);
 
   // Add the user to the `users` array.
   users.push(user);
 
+  // Set the status to 201 Created and end the response.
   return res.status(201).end();
 });
 
