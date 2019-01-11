@@ -3,35 +3,11 @@
 const express = require('express');
 const { check, validationResult } = require('express-validator/check');
 const bcryptjs = require('bcryptjs');
-const atob = require('atob');
-// const auth = require('basic-auth');
+const auth = require('basic-auth');
 
 // This array is used to keep track of user records
 // as they are created.
 const users = [];
-
-/**
- * Returns the user's credentials from the Request Authorization header.
- * @param {Request} req - The Express Request object.
- */
-const getCredentials = (req) => {
-  let credentials = null;
-
-  const authorizationHeaderValue = req.get('Authorization');
-
-  if (authorizationHeaderValue.startsWith('Basic ')) {
-    const base64Credentials = authorizationHeaderValue.slice(6);
-    const stringCredentials = atob(base64Credentials);
-    const partsCredentials = stringCredentials.split(':');
-
-    credentials = {
-      name: partsCredentials[0],
-      pass: partsCredentials[1],
-    };
-  }
-
-  return credentials;
-};
 
 /**
  * Middleware to authenticate the request using Basic Authentication.
@@ -43,8 +19,7 @@ const authenticateUser = (req, res, next) => {
   let message = null;
 
   // Get the user's credentials from the Authorization header.
-  const credentials = getCredentials(req);
-  // const credentials = auth(req);
+  const credentials = auth(req);
 
   if (credentials) {
     // Look for a user whose `username` matches the credentials `name` property.
