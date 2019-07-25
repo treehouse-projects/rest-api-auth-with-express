@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const { check, validationResult } = require('express-validator/check');
+const { check, validationResult } = require('express-validator');
 const bcryptjs = require('bcryptjs');
 const atob = require('atob');
 
